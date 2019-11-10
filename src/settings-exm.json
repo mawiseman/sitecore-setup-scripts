@@ -1,0 +1,87 @@
+{
+    "sitecore":
+	{
+        "version": "Sitecore 8.2 rev. 170614",
+        "license": "C:\\Projects\\client\\dep\\license.xml",
+		"sitecoreVersionsFolder": "c:\\temp\\sitecore\\versions\\",
+        
+		"databaseServer": ".",
+		"databasePrefix": "Client_",
+		"databaseLogin": "loudandclear",
+		"databasePassword": "loudandclear",
+
+		"mongodbServer": "127.0.0.1",
+		"mongodbPrefix": "Client_",
+
+        "sites":
+		[
+			{ 
+				"sitename": "Client-CM",
+				"rootPath":  "c:\\websites\\client.cm\\",
+				"role": "authoring",
+				"modules": 
+				[
+					{
+						"path": "C:\\Projects\\Client\\dep\\sitecore-packages\\EXM-3.4.2\\Email Experience Manager 3.4.2 rev. 170713.zip",
+						"type": "sitecorePackage",
+						"prefunction": "InstallEXMPre",
+						"postfunction": "InstallEXMPost"
+					}
+				]
+			},
+			{ 
+				"sitename": "Client-CD", 
+				"rootPath":  "c:\\websites\\client.cd\\",
+				"role": "delivery",
+				"modules": 
+				[
+					{
+						"path": "C:\\Projects\\Client\\dep\\sitecore-packages\\EXM-3.4.2\\Email Experience Manager - Content Delivery 3.4.2 rev. 170713.zip",
+						"type": "zip",
+						"prefunction": "InstallEXMPre",
+						"postfunction": ""
+					}
+				]
+			}
+		]
+    },
+	"sites":
+	[
+        {
+            "sitename": 		"Client-CM",
+			"physicalpath":		"c:\\websites\\client.cm\\website",
+			"addbindingstohosts": "true",
+			"bindings":
+			[
+				{ 
+					"hostname":	"client.cm.local",
+					"port":		80,
+					"protocol":	"http"
+				},
+				{ 
+					"hostname":	"client.cm.local",
+					"port":		443,
+					"protocol":	"https"
+				}
+			]
+        },
+        {
+            "sitename": 		"Client-CD",
+			"physicalpath":		"c:\\websites\\client.cd\\website",
+			"addbindingstohosts": "true",
+			"bindings":
+			[
+				{ 
+					"hostname":	"client.cd.local",
+					"port":		80,
+					"protocol":	"http"
+				},
+				{ 
+					"hostname":	"client.cd.local",
+					"port":		443,
+					"protocol":	"https"
+				}
+			]
+        }
+    ]
+}
