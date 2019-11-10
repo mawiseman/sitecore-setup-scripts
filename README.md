@@ -26,7 +26,7 @@ It can do the following:
 
 | Object name   | Description                    |
 | ------------- | ------------------------------ |
-| `sitecore`      | Settings for sitecore and the required sites |
+| `sitecore`      | Settings for sitecore and the required sites stored as a `sitecore` object|
 | `sites`   | A collection of `iis-site` objects     |
 
     {
@@ -69,7 +69,7 @@ It can do the following:
 | `sitename` | Used to map a sitecore site to an IIS site. __Must be the same as__ `iis-site.sitename` __!!__ | 
 | `rootPath` | The path to the folder that will contain sitecores folder: data, database and website folders  | 
 | `role` | Site role: `authoring` or `delivery`. For single instance sites use `authoring`  | 
-| `modules` | A list of `sitecore-modules` to install in this sitecore instance  |
+| `modules` | A list of `sitecore-module` objects to install in this sitecore instance  |
 
     {
         "sitename": "Client-CM",
