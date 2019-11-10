@@ -1,0 +1,89 @@
+{
+    "sitecore":
+	{
+        "version": "Sitecore 8.2 rev. 170614",
+        "license": "C:\\Projects\\sc82WFFM\\dep\\license.xml",
+		"sitecoreVersionsFolder": "c:\\temp\\sitecore\\versions\\",
+        
+		"databaseServer": ".",
+		"databasePrefix": "sc82WFFM_",
+		"databaseLogin": "sc82WFFM",
+		"databasePassword": "sc82WFFM",
+
+		"mongodbServer": "127.0.0.1",
+		"mongodbPrefix": "sc82WFFM_",
+
+        "sites":
+		[
+			{ 
+				"sitename": "sc82WFFM-CM",
+				"rootPath":  "c:\\websites\\sc82WFFM.cm\\",
+				"role": "authoring",
+				"modules": 
+				[
+					{ 
+						"path": "C:\\temp\\sitecore\\packages\\301 Redirect Module-1.6.zip",
+						"type": "sitecorePackage"
+					},
+					{ 
+						"path": "C:\\temp\\sitecore\\packages\\WFFM 8.2\\Web Forms for Marketers 8.2 rev. 170518.zip",
+						"type": "sitecorePackage",
+						"prefunction": "",
+						"postfunction": "InstallWFFMPost"
+					}
+				]
+			},
+			{ 
+				"sitename": "sc82WFFM-CD", 
+				"rootPath":  "c:\\websites\\sc82WFFM.cd\\",
+				"role": "delivery",
+				"modules": 
+				[
+					{ 
+						"path": "C:\\temp\\sitecore\\packages\\WFFM 8.2\\Web Forms for Marketers CD 8.2 rev. 170518.zip",
+						"type": "zip"
+					}
+				]
+			}
+		]
+    },
+	"sites":
+	[
+        {
+            "sitename": 		"sc82WFFM-CM",
+			"physicalpath":		"c:\\websites\\sc82WFFM.cm\\website",
+			"addbindingstohosts": "true",
+			"bindings":
+			[
+				{ 
+					"hostname":	"sc82WFFM.cm.local",
+					"port":		80,
+					"protocol":	"http"
+				},
+				{ 
+					"hostname":	"sc82WFFM.cm.local",
+					"port":		443,
+					"protocol":	"https"
+				}
+			]
+        },
+        {
+            "sitename": 		"sc82WFFM-CD",
+			"physicalpath":		"c:\\websites\\sc82WFFM.cd\\website",
+			"addbindingstohosts": "true",
+			"bindings":
+			[
+				{ 
+					"hostname":	"sc82WFFM.cd.local",
+					"port":		80,
+					"protocol":	"http"
+				},
+				{ 
+					"hostname":	"sc82WFFM.cd.local",
+					"port":		443,
+					"protocol":	"https"
+				}
+			]
+        }
+    ]
+}

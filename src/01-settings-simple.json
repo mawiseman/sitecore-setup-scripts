@@ -1,0 +1,76 @@
+{
+    "sitecore":
+	{
+        "version": "Sitecore 8.2 rev. 170614",
+        "license": "C:\\Projects\\client\\dep\\license.xml",
+		"sitecoreVersionsFolder": "c:\\temp\\sitecore\\versions\\",
+        
+		"databaseServer": ".",
+		"databasePrefix": "sc82_",
+		"databaseLogin": "sc82",
+		"databasePassword": "sc82",
+
+		"mongodbServer": "127.0.0.1",
+		"mongodbPrefix": "sc82_",
+
+        "sites":
+		[
+			{ 
+				"sitename": "sc82-CM",
+				"rootPath":  "c:\\websites\\sc82.cm\\",
+				"role": "authoring",
+				"modules": 
+				[
+					{ 
+						"path": "C:\\temp\\sitecore\\packages\\301 Redirect Module-1.6.zip",
+						"type": "sitecorePackage"
+					}
+				]
+			},
+			{ 
+				"sitename": "sc82-CD", 
+				"rootPath":  "c:\\websites\\sc82.cd\\",
+				"role": "delivery"
+			}
+		]
+    },
+	"sites":
+	[
+        {
+            "sitename": 		"sc82-CM",
+			"physicalpath":		"c:\\websites\\sc82.cm\\website",
+			"addbindingstohosts": "true",
+			"bindings":
+			[
+				{ 
+					"hostname":	"sc82.cm.local",
+					"port":		80,
+					"protocol":	"http"
+				},
+				{ 
+					"hostname":	"sc82.cm.local",
+					"port":		443,
+					"protocol":	"https"
+				}
+			]
+        },
+        {
+            "sitename": 		"sc82-CD",
+			"physicalpath":		"c:\\websites\\sc82.cd\\website",
+			"addbindingstohosts": "true",
+			"bindings":
+			[
+				{ 
+					"hostname":	"sc82.cd.local",
+					"port":		80,
+					"protocol":	"http"
+				},
+				{ 
+					"hostname":	"sc82.cd.local",
+					"port":		443,
+					"protocol":	"https"
+				}
+			]
+        }
+    ]
+}

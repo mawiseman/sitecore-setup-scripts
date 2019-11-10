@@ -1,25 +1,26 @@
 
-$AGENTPATH = "\website\sitecore\shell\sim-agent\"
-$INSTALLPACKAGEURL = "/sitecore/shell/sim-agent/InstallPackage.aspx"
+Import-Module $PSScriptRoot\sitecore-wffm.psm1
+Import-Module $PSScriptRoot\sitecore-exm.psm1
+Import-Module $PSScriptRoot\database.psm1
+Import-Module $PSScriptRoot\iis.psm1
 
-function ExtractSitecore()
-{
+$AGENTPATH = "\website\sitecore\shell\sim-agent\"
+$INSTALLPACKAGEURL = "/sitecore-helpers/shell/sim-agent/InstallPackage.aspx"
+
+function ExtractSitecore() {
 	param (
-        [Parameter(Mandatory=$True)][string]$sitecoreVersion,
-		[string]$sitecoreVersionsFolder="C:\temp\sitecore\versions\"
-    )
+		[Parameter(Mandatory = $True)][string]$sitecoreVersion,
+		[string]$sitecoreVersionsFolder = "C:\temp\sitecore\versions\"
+	)
 	
-	begin
-	{
+	begin {
 		Write-Verbose "Extracting Sitecore"
 	}
-	process
-	{
+	process {
 		$extractDestination = "$sitecoreVersionsFolder$sitecoreVersion";
 		$sitecoreZipPath = "$($extractDestination).zip";
 		
-		if(-Not (Test-Path -Path $sitecoreZipPath))
-		{
+		if (-Not (Test-Path -Path $sitecoreZipPath)) {
 			Write-Warning "---------------------------------------------------------------"
 			Write-Warning "Sitecore was not found in $sitecoreVersionsFolder"
 			Write-Warning ""
@@ -33,12 +34,10 @@ function ExtractSitecore()
 			throw [System.IO.FileNotFoundException] "$sitecoreZipPath not found."
 		}
 
-		if(Test-Path -Path $extractDestination )
-		{
+		if (Test-Path -Path $extractDestination ) {
 			Write-Verbose "- Sitecore already extracted: $extractDestination"
 		}
-		else
-		{
+		else {
 			# extract to temp folder to prevent situation when extraction process is interupted
 			# and after retrying script it shows 'Sitecore already extracted' and uses incomplete
 			# set of files.
@@ -57,26 +56,22 @@ function ExtractSitecore()
 			Write-Verbose "Sitecore extracted to: $extractDestination"
 		}
 	}
-	end
-	{
+	end {
 		Write-Verbose "Extracted Sitecore"
 	}
 }
 
-function InstallSitecore()
-{
+function InstallSitecore() {
 	param (
-        [Parameter(Mandatory=$True)][string]$sitecoreVersion,
-		[Parameter(Mandatory=$True)][string]$sitecorePath,
-		[string]$sitecoreVersionsFolder="C:\temp\sitecore\versions\"
-    )
+		[Parameter(Mandatory = $True)][string]$sitecoreVersion,
+		[Parameter(Mandatory = $True)][string]$sitecorePath,
+		[string]$sitecoreVersionsFolder = "C:\temp\sitecore\versions\"
+	)
 	
-	begin
-	{
+	begin {
 		Write-Verbose "Installing Sitecore"
 	}
-	process
-	{
+	process {
 		# Install sitecore files
 
 		$sourcePath = "$sitecoreVersionsFolder$sitecoreVersion"
@@ -93,45 +88,37 @@ function InstallSitecore()
 
 		Copy-Item $sourcePath\* $sitecorePath -Recurse -Force
 	}
-	end
-	{
+	end {
 		Write-Verbose "Sitecore Installed"
 	}
 }
 
-Function InstallLicense()
-{
+Function InstallLicense() {
 	param (
-		[Parameter(Mandatory=$True)][string]$sitecorePath,
-		[Parameter(Mandatory=$True)][string]$licensePath
-    )
+		[Parameter(Mandatory = $True)][string]$sitecorePath,
+		[Parameter(Mandatory = $True)][string]$licensePath
+	)
 	
-	begin
-	{
+	begin {
 		Write-Verbose "Installing Sitecore License"
 	}
-	process
-	{
+	process {
 		Copy-Item $licensePath $sitecorePath\Data -Recurse -Force
 	}
-	end
-	{
+	end {
 		Write-Verbose "Sitecore License installed"
 	}
 }
 
-Function UpdateDataFolder()
-{
+Function UpdateDataFolder() {
 	param (
-		[Parameter(Mandatory=$True)][string]$sitecorePath
-    )
+		[Parameter(Mandatory = $True)][string]$sitecorePath
+	)
 	
-	begin
-	{
+	begin {
 		Write-Verbose "Updating Data folder"
 	}
-	process
-	{
+	process {
 		$datafolderConfigPath = "$sitecorePath\website\app_config\include\DataFolder.config.example"
 
 		# update data path
@@ -140,30 +127,26 @@ Function UpdateDataFolder()
 		# rename the file
 		Move-Item $datafolderConfigPath $datafolderConfigPath.Replace("DataFolder.config.example", "DataFolder.config") -Force
 	}
-	end
-	{
+	end {
 		Write-Verbose "Data folder updated"
 	}
 }
 
-function UpdateConnectionStrings()
-{
+function UpdateConnectionStrings() {
 	param (
-		[Parameter(Mandatory=$True)][string]$namePrefix,
-        [Parameter(Mandatory=$True)][string]$username,
-		[Parameter(Mandatory=$True)][string]$password,
-		[Parameter(Mandatory=$True)][string]$sitecorePath,
-		[Parameter(Mandatory=$True)][string]$mongodbPrefix,
-		[string]$serverinstance=".",
-		[string]$mongodbServer="localhost"		
-    )
+		[Parameter(Mandatory = $True)][string]$namePrefix,
+		[Parameter(Mandatory = $True)][string]$username,
+		[Parameter(Mandatory = $True)][string]$password,
+		[Parameter(Mandatory = $True)][string]$sitecorePath,
+		[Parameter(Mandatory = $True)][string]$mongodbPrefix,
+		[string]$serverinstance = ".",
+		[string]$mongodbServer = "localhost"		
+	)
 	
-	begin
-	{
+	begin {
 		Write-Verbose "Updating connection strings"
 	}
-	process
-	{
+	process {
 		# open connection strings file
 		$connectionStringPath = "$sitecorePath\website\app_config\connectionstrings.config"
 
@@ -182,110 +165,92 @@ function UpdateConnectionStrings()
 		# update mongo tables
 		(Get-Content $connectionStringPath).replace('mongodb://localhost/', "mongodb://$mongoDbServer/$mongodbPrefix") | Set-Content $connectionStringPath
 	}
-	end
-	{
+	end {
 		Write-Verbose "Connection strings updated"
 	}
 }
 
-function AddAppPoolToLocalUserGroups()
-{
+function AddAppPoolToLocalUserGroups() {
 	param (
-        [Parameter(Mandatory=$True)][string]$appPoolIdentity
-    )
-	begin
-	{
+		[Parameter(Mandatory = $True)][string]$appPoolIdentity
+	)
+	begin {
 		Write-Verbose "Adding appPoolIdentity: '$appPoolIdentity' to Local User Groups"
 	}
-	process
-	{
+	process {
 		$localUserGroups = "Performance Log Users", "Performance Monitor Users"
 	
-		ForEach($localUserGroup in $localUserGroups) {
+		ForEach ($localUserGroup in $localUserGroups) {
 			Remove-LocalGroupMember -Group $localUserGroup -Member "$appPoolIdentity"  -ErrorAction SilentlyContinue
 			Add-LocalGroupMember -Group $localUserGroup -Member "$appPoolIdentity"
 		}
 	}
-	end
-	{
+	end {
 		Write-Verbose "appPoolIdentity added to Local User Groups"
 	}
 }
 
-function ApplyFolderPermissions()
-{
+function ApplyFolderPermissions() {
 	param (
-        [Parameter(Mandatory=$True)][string]$sitecorePath,
-		[Parameter(Mandatory=$True)][string]$appPoolIdentity
-    )
-	begin
-	{
+		[Parameter(Mandatory = $True)][string]$sitecorePath,
+		[Parameter(Mandatory = $True)][string]$appPoolIdentity
+	)
+	begin {
 		Write-Verbose "Adding permissions for: '$appPoolIdentity' to: $sitecorePath"
 	}
-	process
-	{
+	process {
 		$acl = Get-Acl "$sitecorePath"
 		$accessRule = New-Object  system.security.accesscontrol.filesystemaccessrule("$appPoolIdentity", "Modify", "ContainerInherit,ObjectInherit", "None", "Allow")
 		$acl.SetAccessRule($accessRule)
 		
 		Set-Acl "$sitecorePath" $acl
 	}
-	end
-	{
+	end {
 		Write-Verbose "Permissions applied"
 	}
 }
 
-function Start-Sitecore()
-{
+function Start-Sitecore() {
 	param (
-        [Parameter(Mandatory=$True)][string]$url
-    )
+		[Parameter(Mandatory = $True)][string]$url
+	)
 
-	begin
-	{
+	begin {
 		Write-Verbose "Starting Sitecore: $url"
 	}
-	process
-	{
+	process {
 		# This will throw an exception if something went wrong
 		# We need to set the result to something so as not to render it in the console
 
 		$req = Invoke-WebRequest -URI $url
 	}
-	end
-	{
+	end {
 		Write-Verbose "Sitecore Started"
 	}
 }
 
-function InstallPackageHelpers()
-{
+function InstallPackageHelpers() {
 	param (
-        [Parameter(Mandatory=$True)][string]$sitecorePath
-    )
+		[Parameter(Mandatory = $True)][string]$sitecorePath
+	)
 
-	begin
-	{
+	begin {
 		Write-Verbose "Installing Sitecore Package Helpers"
 	}
-	process
-	{
+	process {
 		$agentPath = "$sitecorePath\$AGENTPATH"
 
 		Copy-Item $PSScriptRoot\sitecore\* (New-Item "$agentPath" -Type container -Force) -Recurse -Force
 	}
-	end
-	{
+	end {
 		Write-Verbose "Sitecore Package Helpers Installed"
 	}
 }
 
-function Start-Sleep($activity, $status, $seconds) 
-{
+function Start-Sleep($activity, $status, $seconds) {
 	$doneDT = (Get-Date).AddSeconds($seconds)
 
-	while($doneDT -gt (Get-Date)) {
+	while ($doneDT -gt (Get-Date)) {
 		$secondsLeft = $doneDT.Subtract((Get-Date)).TotalSeconds
 		$percent = ($seconds - $secondsLeft) / $seconds * 100
 
@@ -297,22 +262,17 @@ function Start-Sleep($activity, $status, $seconds)
 	Write-Progress -Activity $activity -Status $status -SecondsRemaining 0 -Completed
 }
 
-function InstallPackage
-{
+function InstallPackage {
 	param (
-        [Parameter(Mandatory=$True)][string]$sitecoreUrl,
-		[Parameter(Mandatory=$True)][string]$sitecorePath,
-		[Parameter(Mandatory=$True)][object]$module
-    )
-
-	begin
-	{
+		[Parameter(Mandatory = $True)][string]$sitecoreUrl,
+		[Parameter(Mandatory = $True)][string]$sitecorePath,
+		[Parameter(Mandatory = $True)][object]$module
+	)
+	begin {
 		Write-Verbose "Installing Package $($module.path)"
 	}
-	process
-	{
-		if($module.type -eq "sitecorePackage")
-		{
+	process {
+		if ($module.type -eq "sitecorePackage") {
 			Copy-Item $module.path "$sitecorePath\data\packages\" -Force
 
 			$filename = Split-Path $module.path -leaf
@@ -331,8 +291,7 @@ function InstallPackage
 			$inprogress = $true;
 
 			do {
-				if(Test-Path $simStatusPath)
-				{
+				if (Test-Path $simStatusPath) {
 					Start-Sleep "Installing Package" $filename 5
 
 					$status = (Get-Content $simStatusPath | ConvertFrom-Json)
@@ -341,8 +300,7 @@ function InstallPackage
 
 					$inprogress = $status.status -eq "installing"
 				}
-				else
-				{
+				else {
 					Start-Sleep "Waiting for start" $filename 5
 
 					Write-Verbose "Waiting for start"
@@ -353,15 +311,133 @@ function InstallPackage
 			Remove-Item $simStatusPath
 		}
 
-		if($module.type -eq "zip")
-		{
+		if ($module.type -eq "zip") {
 			Expand-Archive $module.path -DestinationPath $sitecorePath\website -Force
 		}
 	}
-	end
-	{
+	end {
 		Write-Verbose "Package Installed"
 	}
 }
 
-Export-ModuleMember ExtractSitecore, InstallSitecore, UpdateConnectionStrings, AddAppPoolToLocalUserGroups, ApplyFolderPermissions, InstallLicense, UpdateDataFolder, Start-Sitecore, InstallPackageHelpers, InstallPackage
+function InstallSitecore() {
+	param (
+		[Parameter(Mandatory = $True)][string]$jsonFilePath
+	)
+	begin {
+		Write-Verbose "Installing Sitecore using $sitecoreSettingFile"
+	}
+	process {
+		$settings = (Get-Content $sitecoreSettingFile | ConvertFrom-Json)
+
+		# Get Sitecore
+
+		Write-Host "Get Sitecore: $($settings.sitecore.version)" 
+
+		ExtractSitecore -sitecoreVersion $settings.sitecore.version -sitecoreVersionsFolder $settings.sitecore.sitecoreVersionsFolder -Verbose
+
+		# Detaching databases
+
+		Write-Host "Detaching databases" 
+
+		ForEach ($sitecoreSite in $settings.sitecore.sites) {
+			if ($sitecoreSite.role -eq "authoring") {
+				DetatchDatabases -nameprefix $settings.sitecore.databasePrefix  -databaseFolderPath "$($sitecoreSite.rootPath)\Databases"  -Verbose
+			}
+		}
+
+		# Create Sites
+
+		Write-Host "Create Sites"
+
+		ForEach ($sitecoreSite in $settings.sitecore.sites) {
+			Write-Host "Create Site: $($sitecoreSite.sitename)" 
+
+			$iisSite = $settings.sites | Where-Object sitename -eq $sitecoreSite.sitename
+
+			InstallSitecore -sitecoreVersion $settings.sitecore.version -sitecorePath $sitecoreSite.rootPath -sitecoreVersionsFolder $settings.sitecore.sitecoreVersionsFolder -Verbose
+			UpdateDataFolder -sitecorePath $sitecoreSite.rootPath -Verbose
+			InstallLicense -sitecorePath $sitecoreSite.rootPath -licensePath $settings.sitecore.license  -Verbose
+
+			ConfigureIIS -site $iisSite -Verbose
+		}
+
+		# Install Databases
+
+		Write-Host "Install Databases"
+
+		ForEach ($sitecoreSite in $settings.sitecore.sites) {
+			if ($sitecoreSite.role -eq "authoring") {
+				AttachDatabases -nameprefix $settings.sitecore.databasePrefix  -databaseFolderPath "$($sitecoreSite.rootPath)\Databases" -username $settings.sitecore.databaseLogin -password $settings.sitecore.databasePassword -Verbose
+			}
+
+			UpdateConnectionStrings `
+				-serverInstance $settings.sitecore.databaseServer `
+				-sitecorePath $sitecoreSite.rootPath `
+				-nameprefix $settings.sitecore.databasePrefix `
+				-username $settings.sitecore.databaseLogin `
+				-password $settings.sitecore.databasePassword `
+				-mongodbServer $settings.sitecore.mongodbServer `
+				-mongodbPrefix $settings.sitecore.mongodbPrefix `
+				-Verbose
+		}
+
+		# User Permissions
+
+		ForEach ($sitecoreSite in $settings.sitecore.sites) {
+			AddAppPoolToLocalUserGroups -appPoolIdentity "iis apppool\$($sitecoreSite.sitename)" -Verbose
+			ApplyFolderPermissions -sitecorePath $sitecoreSite.rootPath -appPoolIdentity "iis apppool\$($sitecoreSite.sitename)" -Verbose
+		}
+
+		# Starting Sitecore
+
+		ForEach ($sitecoreSite in $settings.sitecore.sites) {
+			$iisSite = $settings.sites | Where-Object sitename -eq $sitecoreSite.sitename
+			$iisSiteUrl = "http://$($sitecoreSite.sitename)"
+
+			if ($sitecoreSite.role -eq "authoring") {
+				Start-Sitecore $iisSiteUrl -Verbose
+			}
+		}
+
+		# Install Modules
+
+		Write-Host "Install Modules"
+
+		ForEach ($sitecoreSite in $settings.sitecore.sites) {
+			$iisSite = $settings.sites | Where-Object sitename -eq $sitecoreSite.sitename
+			$iisSiteUrl = "$($iisSite.bindings[0].protocol)://$($iisSite.bindings[0].hostname)"
+
+			if ($sitecoreSite.role -eq "authoring") {
+				InstallPackageHelpers -sitecorePath $sitecoreSite.rootPath -Verbose
+			}
+
+			ForEach ($module in $sitecoreSite.modules) {
+				if (![bool]$module.prefunction -eq "") {
+					& $module.prefunction `
+						-settings $settings `
+						-sitecorePath $sitecoreSite.rootPath `
+						-Verbose
+				}
+
+				InstallPackage `
+					-sitecoreUrl $iisSiteUrl `
+					-sitecorePath $sitecoreSite.rootPath `
+					-module $module `
+					-Verbose
+
+				if (![bool]$module.postfunction -eq "") {
+					& $module.postfunction  `
+						-settings $settings `
+						-sitecorePath $sitecoreSite.rootPath `
+						-Verbose
+				}
+			}
+		}
+	}
+	end {
+		Write-Verbose "Sitecore Installed"
+	}
+}
+
+Export-ModuleMember InstallSitecore

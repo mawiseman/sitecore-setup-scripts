@@ -12,15 +12,31 @@ It can do the following:
 - Attach Databases
 - Create required SQL users
 
-## Process
+## Usage 
 
-1. Checkout your sitecore repo
-1. Download the required Sitecore zip to c:\temp\sitecore\versions
-1. Update settings.json with your environment settings
+1. Review the `Settings.json Specification` section
+    - Sitecore zip files should be stored
+    - licence.xml should be stored
+1. Create/Update settings.json with your environment settings
 1. Open Powershell Console as an Administrator
-1. Run install.ps1 (install-with-exm.ps1)
 
-## Settings.json spec
+### Interactive
+
+1. From an elevated Powershell session run
+```
+PS C:\projects\sitecore-setup\src> .\install.ps1
+```
+2. Select the Sitecore configuration you'd like to install
+3. Enjoy the show
+
+### Automatic
+
+```
+PS C:\projects\sitecore-setup\src> Import-Module .\modules\sitecore.psm1
+PS C:\projects\sitecore-setup\src> InstallSitecore -sitecoreSettingFile 'C:\projects\sitecore-setup-scripts\src\01-settings-simple.json'
+```
+
+## Settings.json Specification
 
 ### settings
 
