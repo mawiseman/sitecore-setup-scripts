@@ -2,7 +2,7 @@
     "sitecore":
 	{
         "version": "Sitecore 8.2 rev. 170614",
-        "license": "C:\\Projects\\sc82EXM\\dep\\license.xml",
+        "license": "c:\\temp\\sitecore\\license.xml",
 		"sitecoreVersionsFolder": "c:\\temp\\sitecore\\versions\\",
         
 		"databaseServer": ".",
@@ -21,8 +21,12 @@
 				"role": "authoring",
 				"modules": 
 				[
+					{ 
+						"path": "C:\\temp\\sitecore\\modules\\301 Redirect Module-1.6.zip",
+						"type": "sitecorePackage"
+					},
 					{
-						"path": "C:\\temp\\sitecore\\packages\\EXM-3.4.2\\Email Experience Manager 3.4.2 rev. 170713.zip",
+						"path": "C:\\temp\\sitecore\\modules\\EXM-3.4.2\\Email Experience Manager 3.4.2 rev. 170713.zip",
 						"type": "sitecorePackage",
 						"prefunction": "InstallEXMPre",
 						"postfunction": "InstallEXMPost"
@@ -36,7 +40,7 @@
 				"modules": 
 				[
 					{
-						"path": "C:\\temp\\sitecore\\packages\\EXM-3.4.2\\Email Experience Manager - Content Delivery 3.4.2 rev. 170713.zip",
+						"path": "C:\\temp\\sitecore\\modules\\EXM-3.4.2\\Email Experience Manager - Content Delivery 3.4.2 rev. 170713.zip",
 						"type": "zip",
 						"prefunction": "InstallEXMPre",
 						"postfunction": ""

@@ -2,6 +2,7 @@
 
 Import-Module $PSScriptRoot\modules\menu.psm1
 Import-Module $PSScriptRoot\modules\write-ascii\write-ascii.psd1
+Import-Module $PSScriptRoot\modules\sitecore.psm1
 
 Write-Ascii "Setup Sitecore" -ForegroundColor Green
 

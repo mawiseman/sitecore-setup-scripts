@@ -14,11 +14,34 @@ It can do the following:
 
 ## Usage 
 
-1. Review the `Settings.json Specification` section
-    - Sitecore zip files should be stored
-    - licence.xml should be stored
-1. Create/Update settings.json with your environment settings
-1. Open Powershell Console as an Administrator
+### Pre-requisites
+
+The included json files assume that you have the following files and folder structure. 
+
+```
+c:\temp
+└───sitecore
+│   │   license.xml
+│   │
+│   └───modules
+│       │   301 Redirect Module-1.6.zip
+│       │
+│       └───WFFM 8.2
+│       │       Web Forms for Marketers 8.2 rev. 170518.zip
+│       │       Web Forms for Marketers CD 8.2 rev. 170518.zip
+│       │
+│       └───EXM-3.4.2
+│               Web Forms for Marketers 8.2 rev. 170518.zip
+│               Web Forms for Marketers CD 8.2 rev. 170518.zip
+│   
+└───versions
+        Sitecore 8.2 rev. 170614.zip
+```
+
+However it is recommended that you
+- Continue to keep Sitecore Zip files in a shared location (like temp)
+- Store the license.xml file in your project directory
+- Store the required modules in your project directory
 
 ### Interactive
 

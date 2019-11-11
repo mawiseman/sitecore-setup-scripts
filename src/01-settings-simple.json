@@ -2,7 +2,7 @@
     "sitecore":
 	{
         "version": "Sitecore 8.2 rev. 170614",
-        "license": "C:\\Projects\\client\\dep\\license.xml",
+        "license": "c:\\temp\\sitecore\\license.xml",
 		"sitecoreVersionsFolder": "c:\\temp\\sitecore\\versions\\",
         
 		"databaseServer": ".",
@@ -22,7 +22,7 @@
 				"modules": 
 				[
 					{ 
-						"path": "C:\\temp\\sitecore\\packages\\301 Redirect Module-1.6.zip",
+						"path": "C:\\temp\\sitecore\\modules\\301 Redirect Module-1.6.zip",
 						"type": "sitecorePackage"
 					}
 				]

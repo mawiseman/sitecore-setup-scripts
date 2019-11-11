@@ -5,7 +5,7 @@ Import-Module $PSScriptRoot\database.psm1
 Import-Module $PSScriptRoot\iis.psm1
 
 $AGENTPATH = "\website\sitecore\shell\sim-agent\"
-$INSTALLPACKAGEURL = "/sitecore-helpers/shell/sim-agent/InstallPackage.aspx"
+$INSTALLPACKAGEURL = "/sitecore/shell/sim-agent/InstallPackage.aspx"
 
 function ExtractSitecore() {
 	param (
@@ -61,7 +61,7 @@ function ExtractSitecore() {
 	}
 }
 
-function InstallSitecore() {
+function CopySitecore() {
 	param (
 		[Parameter(Mandatory = $True)][string]$sitecoreVersion,
 		[Parameter(Mandatory = $True)][string]$sitecorePath,
@@ -240,7 +240,7 @@ function InstallPackageHelpers() {
 	process {
 		$agentPath = "$sitecorePath\$AGENTPATH"
 
-		Copy-Item $PSScriptRoot\sitecore\* (New-Item "$agentPath" -Type container -Force) -Recurse -Force
+		Copy-Item $PSScriptRoot\sitecore-helpers\* (New-Item "$agentPath" -Type container -Force) -Recurse -Force
 	}
 	end {
 		Write-Verbose "Sitecore Package Helpers Installed"
@@ -322,7 +322,7 @@ function InstallPackage {
 
 function InstallSitecore() {
 	param (
-		[Parameter(Mandatory = $True)][string]$jsonFilePath
+		[Parameter(Mandatory = $True)][string]$sitecoreSettingFile
 	)
 	begin {
 		Write-Verbose "Installing Sitecore using $sitecoreSettingFile"
@@ -355,7 +355,7 @@ function InstallSitecore() {
 
 			$iisSite = $settings.sites | Where-Object sitename -eq $sitecoreSite.sitename
 
-			InstallSitecore -sitecoreVersion $settings.sitecore.version -sitecorePath $sitecoreSite.rootPath -sitecoreVersionsFolder $settings.sitecore.sitecoreVersionsFolder -Verbose
+			CopySitecore -sitecoreVersion $settings.sitecore.version -sitecorePath $sitecoreSite.rootPath -sitecoreVersionsFolder $settings.sitecore.sitecoreVersionsFolder -Verbose
 			UpdateDataFolder -sitecorePath $sitecoreSite.rootPath -Verbose
 			InstallLicense -sitecorePath $sitecoreSite.rootPath -licensePath $settings.sitecore.license  -Verbose
 
